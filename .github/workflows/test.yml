@@ -1,0 +1,23 @@
+name: Test build setups
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout internal scripts
+        uses: actions/checkout@v2
+        with:
+          repository: bugbounty-site-public/scripts
+          ref: main
+          path: scripts
+
+      - name: run test against this repo with the build
+        run: bash scripts/test.sh ${{ github.token }} 
